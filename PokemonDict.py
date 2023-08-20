@@ -1,0 +1,25 @@
+from __future__ import annotations
+import Type
+import Enums
+from Pokemon import Pokemon
+
+# this is a wrapper class for a dictionary that contains Pokemon objects.
+# key: string (pokemonName. TODO change this to the pokemon name enum if I make one).
+# value: The Pokemon object.
+
+class PokemonDict:
+    def __init__(self):
+        self.Dict = dict()
+
+    def Add(self, pokemonName: str, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, canMega=False):
+        self.Dict[pokemonName] = Pokemon(pokemonName, type1, type2, tier, evolvesNeeded, canMega)
+    
+    def Get(self, pokemonName: str) -> Pokemon:
+        return self.Dict[pokemonName]
+    
+    def FillDict(self, types: Type.TypeDict):
+        #        PokemonName, type1, type2, tier, evolvesNeeded, canMega(default False) 
+        #TEST DATA
+        self.Add("TestGrassIceMon", types.Grass, types.Ice, Enums.Tier.OU, 0, True)
+        self.Add("TestGrassMon", types.Grass, None, Enums.Tier.OU, 0)
+        self.Add("TestIceMon", types.Ice, None, Enums.Tier.OU, 0, True)
