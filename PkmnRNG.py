@@ -111,8 +111,10 @@ def main():
     print("INITIALIZATION:")
     print("  Building type data...")
     #name, weaknessList, resistancesList, immunitiesList
-    NormalType = Type(TypeName.Normal, [TypeName.Fighting], [], [TypeName.Ghost])
-    FireType = Type(TypeName.Fire, [TypeName.Water, TypeName.Ground, TypeName.Rock], [TypeName.Fire, TypeName.Grass, TypeName.Ice, TypeName.Bug, TypeName.Steel, TypeName.Fairy], [])
+    NormalType   = Type(TypeName.Normal, [TypeName.Fighting], [], [TypeName.Ghost])
+    FireType     = Type(TypeName.Fire, [TypeName.Water, TypeName.Ground, TypeName.Rock], [TypeName.Fire, TypeName.Grass, TypeName.Ice, TypeName.Bug, TypeName.Steel, TypeName.Fairy], [])
+    WaterType    = Type(TypeName.Water, [TypeName.Electric, TypeName.Grass], [TypeName.Fire, TypeName.Water, TypeName.Ice, TypeName.Steel], [])
+    ElectricType = Type(TypeName.Electric, [TypeName.Ground], [TypeName.Electric, TypeName.Flying, TypeName.Steel])
 
     print("  Building Pokemon data...")
     Pokemon = dict()# This is a dictionary so that pokemon weakness lookups are fast.
