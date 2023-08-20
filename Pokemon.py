@@ -1,6 +1,4 @@
 from __future__ import annotations
-from colorama import Fore
-from colorama import Style
 import Type
 import Enums
 import CommonFunctions
@@ -10,21 +8,22 @@ import Constants
 #       if I did that, I'd have to store the optimal move spread, item, EVs/IVs, ability in this object.
 
 class Pokemon:
-    def __init__(self, name, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, canMega):
+    def __init__(self, name, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, generation, canMega):
         self.Name = name
         self.Type1 = type1
         self.Type2 = type2
         self.Tier = tier
         self.CanMega = canMega
         self.EvolvesNeeded = evolvesNeeded
+        self.Generation = generation
     
     def GetAllDefensiveTypeMatchupsString(self) -> str:
-        retString = str(Style.BRIGHT + self.Name + Style.RESET_ALL + " - " + self.Type1.TypeName)
+        retString = str(Constants.STYLE_BRIGHT + self.Name + Constants.STYLE_RESET + " - " + self.Type1.TypeName)
         if not self.Type2 is None:
             retString += "/" + self.Type2.TypeName
-        retString += Constants.WEAKNESS_COLOR + Style.BRIGHT + "\nWeaknesses" + Style.RESET_ALL + ": " + self.GetWeaknesses(Constants.WEAKNESS_COLOR)
-        retString += Constants.RESISTANCE_COLOR + Style.BRIGHT + "\nResistances" + Style.RESET_ALL + ": " + self.GetResistances(Constants.RESISTANCE_COLOR)
-        retString += Constants.IMMUNITY_COLOR + Style.BRIGHT + "\nImmunities" + Style.RESET_ALL + ": " + self.GetImmunities(Constants.IMMUNITY_COLOR)
+        retString += Constants.COLOR_WEAKNESS + Constants.STYLE_BRIGHT + "\nWeaknesses" + Constants.STYLE_RESET + ": " + self.GetWeaknesses(Constants.COLOR_WEAKNESS)
+        retString += Constants.COLOR_RESISTANCE + Constants.STYLE_BRIGHT + "\nResistances" + Constants.STYLE_RESET + ": " + self.GetResistances(Constants.COLOR_RESISTANCE)
+        retString += Constants.COLOR_IMMUNITY + Constants.STYLE_BRIGHT + "\nImmunities" + Constants.STYLE_RESET + ": " + self.GetImmunities(Constants.COLOR_IMMUNITY)
         return retString
     
     def GetWeaknesses(self, doubleEffectColor: str) -> str:

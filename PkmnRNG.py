@@ -3,9 +3,6 @@ import random
 import math
 import sys
 from enum import IntEnum
-from colorama import init as colorama_init
-from colorama import Fore
-from colorama import Style
 import Type
 import Pokemon
 import Enums
@@ -33,7 +30,7 @@ Created on Aug 19, 2023
 #FUNCTIONS====================
 def main():
     print("INITIALIZATION:")
-    colorama_init()
+    #colorama_init()
     print("  Building type data...")
     types = TypeDict.TypeDict()
 

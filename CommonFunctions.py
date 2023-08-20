@@ -1,6 +1,5 @@
 from __future__ import annotations
-from colorama import Fore
-from colorama import Style
+import Constants
 import Enums
 
 def GetTypeListString(typeDict: dict, doubleEffectColor: str) -> str:
@@ -14,9 +13,9 @@ def GetTypeListString(typeDict: dict, doubleEffectColor: str) -> str:
             if value == 1:
                 retString += Enums.TypeName(key).name
             else:
-                retString += Style.BRIGHT + doubleEffectColor + Enums.TypeName(key).name + Style.RESET_ALL# + " (x" + str(value) + ")"
+                retString += Constants.STYLE_BRIGHT + doubleEffectColor + Enums.TypeName(key).name + Constants.STYLE_RESET# + " (x" + str(value) + ")"
         
         if retString == "":
-            retString = Fore.LIGHTBLACK_EX + "None" + Style.RESET_ALL
+            retString = Constants.COLOR_NONE + "None" + Constants.STYLE_RESET
 
         return retString
