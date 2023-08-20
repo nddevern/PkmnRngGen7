@@ -1,6 +1,7 @@
 from __future__ import annotations
 import Type
 import Enums
+import TypeDict
 from Pokemon import Pokemon
 
 # this is a wrapper class for a dictionary that contains Pokemon objects.
@@ -17,7 +18,7 @@ class PokemonDict:
     def Get(self, pokemonName: str) -> Pokemon:
         return self.Dict[pokemonName]
     
-    def FillDict(self, types: Type.TypeDict):
+    def FillDict(self, types: TypeDict.TypeDict):
         #        PokemonName, type1, type2, tier, evolvesNeeded, canMega(default False) 
         #TEST DATA
         self.Add("TestGrassIceMon", types.Grass, types.Ice, Enums.Tier.OU, 0, True)
