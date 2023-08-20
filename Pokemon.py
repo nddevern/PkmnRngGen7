@@ -28,27 +28,32 @@ class Pokemon:
     
     def GetWeaknesses(self, doubleEffectColor: str) -> str:
         WeaknessesToPrint = dict()#typeValue -> weaknessMultiplier
-        WeaknessesToPrint = self.Type1.GetTypesToPrint(WeaknessesToPrint, self.Type1.Weaknesses, self.Type1.Resistances, self.Type1.Immunities)
+        WeaknessesToPrint = self.Type1.GetTypesToPrint(WeaknessesToPrint, self.Type1.Weaknesses, [], [])
         
         if not self.Type2 is None:
             WeaknessesToPrint = self.Type2.GetTypesToPrint(WeaknessesToPrint, self.Type2.Weaknesses, self.Type2.Resistances, self.Type2.Immunities)
+            WeaknessesToPrint = self.Type1.ExcludeTypesFromList(WeaknessesToPrint, self.Type1.Resistances)
+            WeaknessesToPrint = self.Type1.ExcludeTypesFromList(WeaknessesToPrint, self.Type1.Immunities)
         
         return CommonFunctions.GetTypeListString(WeaknessesToPrint, doubleEffectColor)
     
     def GetResistances(self, doubleEffectColor: str) -> str:
         ResistancesToPrint = dict()#typeValue -> weaknessMultiplier
-        ResistancesToPrint = self.Type1.GetTypesToPrint(ResistancesToPrint, self.Type1.Resistances, self.Type1.Weaknesses, self.Type1.Immunities)
+        ResistancesToPrint = self.Type1.GetTypesToPrint(ResistancesToPrint, self.Type1.Resistances, [], [])
         
         if not self.Type2 is None:
             ResistancesToPrint = self.Type2.GetTypesToPrint(ResistancesToPrint, self.Type2.Resistances, self.Type2.Weaknesses, self.Type2.Immunities)
+            ResistancesToPrint = self.Type1.ExcludeTypesFromList(ResistancesToPrint, self.Type1.Weaknesses)
+            ResistancesToPrint = self.Type1.ExcludeTypesFromList(ResistancesToPrint, self.Type1.Immunities)
         
         return CommonFunctions.GetTypeListString(ResistancesToPrint, doubleEffectColor)
     
+    #"double immunities" are not handled by this function but they do not exist anyway
     def GetImmunities(self, doubleEffectColor: str) -> str:
         ImmunitiesToPrint = dict()#typeValue -> weaknessMultiplier
-        ImmunitiesToPrint = self.Type1.GetTypesToPrint(ImmunitiesToPrint, self.Type1.Immunities, self.Type1.Weaknesses, self.Type1.Resistances)
+        ImmunitiesToPrint = self.Type1.GetTypesToPrint(ImmunitiesToPrint, self.Type1.Immunities, [], [])
         
         if not self.Type2 is None:
-            ImmunitiesToPrint = self.Type2.GetTypesToPrint(ImmunitiesToPrint, self.Type2.Immunities, self.Type2.Weaknesses, self.Type2.Resistances)
+            ImmunitiesToPrint = self.Type2.GetTypesToPrint(ImmunitiesToPrint, self.Type2.Immunities, [], [])
         
         return CommonFunctions.GetTypeListString(ImmunitiesToPrint, doubleEffectColor)

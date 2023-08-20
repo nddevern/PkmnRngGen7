@@ -22,5 +22,5 @@ class PokemonDict:
         #        PokemonName, type1, type2, tier, evolvesNeeded, canMega(default False) 
         #TEST DATA
         self.Add("TestGrassIceMon", types.Grass, types.Ice, Enums.Tier.OU, 0, 1, True)
-        self.Add("TestGrassMon", types.Grass, None, Enums.Tier.OU, 2, 0)
-        self.Add("TestIceMon", types.Ice, None, Enums.Tier.OU, 0, 3, True)
+        self.Add("TestGrassMon", types.Fairy, types.Steel, Enums.Tier.OU, 2, 0)
+        self.Add("TestIceMon", types.Steel, types.Fairy, Enums.Tier.OU, 0, 3, True)

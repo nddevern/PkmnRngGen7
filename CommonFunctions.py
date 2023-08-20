@@ -13,7 +13,7 @@ def GetTypeListString(typeDict: dict, doubleEffectColor: str) -> str:
             if value == 1:
                 retString += Enums.TypeName(key).name
             else:
-                retString += Constants.STYLE_BRIGHT + doubleEffectColor + Enums.TypeName(key).name + Constants.STYLE_RESET# + " (x" + str(value) + ")"
+                retString += Constants.STYLE_BRIGHT + doubleEffectColor + Enums.TypeName(key).name + Constants.STYLE_RESET + " (x" + str(value) + ")"
         
         if retString == "":
             retString = Constants.COLOR_NONE + "None" + Constants.STYLE_RESET
