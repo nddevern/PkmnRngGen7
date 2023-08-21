@@ -39,9 +39,9 @@ def main():
     pokemon.FillDict(types)
 
     print("INITIALIZATION COMPLETE.\n\n")
-    print(pokemon.Get("TestGrassIceMon").GetAllDefensiveTypeMatchupsString() + "\n")
-    print(pokemon.Get("TestGrassMon").GetAllDefensiveTypeMatchupsString() + "\n")
-    print(pokemon.Get("TestIceMon").GetAllDefensiveTypeMatchupsString() + "\n")
+    print(pokemon.Get(Enums.PokemonName.Bulbasaur.value).GetAllDefensiveTypeMatchupsString() + "\n")
+    #print(pokemon.Get("TestGrassMon").GetAllDefensiveTypeMatchupsString() + "\n")
+    #print(pokemon.Get("TestIceMon").GetAllDefensiveTypeMatchupsString() + "\n")
 
     input("Press Enter to close...")
     sys.exit()

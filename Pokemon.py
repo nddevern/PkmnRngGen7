@@ -8,8 +8,8 @@ import Constants
 #       if I did that, I'd have to store the optimal move spread, item, EVs/IVs, ability in this object.
 
 class Pokemon:
-    def __init__(self, name, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, generation, canMega):
-        self.Name = name
+    def __init__(self, pokemonId, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, generation, canMega):
+        self.PokemonId = pokemonId
         self.Type1 = type1
         self.Type2 = type2
         self.Tier = tier
@@ -18,7 +18,7 @@ class Pokemon:
         self.Generation = generation
     
     def GetAllDefensiveTypeMatchupsString(self) -> str:
-        retString = str(Constants.STYLE_BRIGHT + self.Name + Constants.STYLE_RESET + " - " + self.Type1.TypeName)
+        retString = str(Constants.STYLE_BRIGHT + Enums.PokemonName(self.PokemonId).name + Constants.STYLE_RESET + " - " + self.Type1.TypeName)
         if not self.Type2 is None:
             retString += "/" + self.Type2.TypeName
         retString += Constants.COLOR_WEAKNESS + Constants.STYLE_BRIGHT + "\nWeaknesses" + Constants.STYLE_RESET + ": " + self.GetWeaknesses(Constants.COLOR_WEAKNESS)
