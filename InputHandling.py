@@ -1,30 +1,129 @@
-# TODO.
-# this is intended to be a file which contains functions to handle user input.
+# this is a file which contains functions to handle user input.
+# ALL INPUT IS SANITIZED INTO LOWER CASE!!!
 
-# Runs a loop with the input() function that validates that an integer was entered.
-# If the user enters a valid command instead, that is also allowed; this function executes the command and then continues to loop until a valid input is received.
-# todo: also put this in a try catch so it can keep looping if an error happens.
-# def GetInt(prompt: str, allowOtherCommands=True) -> int:
-#   while(1):
-#     pcInput = input(prompt)
-#     sanitizedInput = SanitizeInput(pcInput)
-#     if ValidInt(sanitizedInput):
-#         # return the int
-#     elif ValidCommand(sanitizedInput):
-#         # run the command and loop
-#     else:
-#         # print a message telling the user that the input is not valid and loop (MAKE THIS MESSAGE GENERIC)
+# Returns a string with leading/trailing whitespace trimmed, converted to lower case for input handling purposes, and with any other necessary sanitization performed.
+def SanitizeInput(input: str) -> str:
+    return input.strip().lower()
 
-# just like GetInt, but for strings. used for getting user names.
-# def GetString(prompt: str, allowOtherCommands=True) -> str:
-
-
-# Returns a string with leading/trailing whitespace trimmed and with any other necessary sanitization performed.
-# def SanitizeInput(input: str) -> str:
+# Does not return until a valid integer has been input. Returns the int.
+def GetInt(prompt: str, allowOtherCommands=True, confirm=False, maxSaneValue=99, enforcedMinimum=-999) -> int:
+    while(1):
+        printErrorMessageOnLoop = True
+        try:
+            pcInput = input(prompt + " ")
+            sanitizedInput = SanitizeInput(pcInput)
+            if ValidInt(sanitizedInput, enforcedMinimum=enforcedMinimum):
+                finalInput = int(sanitizedInput)
+                if finalInput > maxSaneValue:
+                    if GetYesOrNo("High input value detected. Are you sure you meant " + str(finalInput) + "?"):
+                        return finalInput
+                    else: 
+                        printErrorMessageOnLoop = False
+                else:
+                    return finalInput
+            #elif ValidCommand(sanitizedInput) AND allowOtherCommands:
+            # # run the command and loop
+            if printErrorMessageOnLoop:
+                print("Expected an integer input. Please try again.")
+        except Exception:
+            print("An error occurred. Please try again.")
 
 # returns true if the input is a valid integer, false otherwise.
-# def ValidInt(input: str) -> bool:
+def ValidInt(input: str, enforcedMinimum) -> bool:
+    try:
+        if not input.isalnum():
+            return False
+        returnedValue = int(input)
+        if returnedValue < enforcedMinimum:
+            return False
+        return True
+    except ValueError:
+        return False
 
+# Does not return until a valid Yes/No has been input. Returns a bool of the result.
+def GetYesOrNo(prompt: str, allowOtherCommands=False, confirm=False) -> bool:
+    while(1):
+        printErrorMessageOnLoop = True
+        try:
+            pcInput = input(prompt + " (Y/N) ")
+            sanitizedInput = SanitizeInput(pcInput)
+            if ValidYesNo(sanitizedInput):
+                if IsYes(sanitizedInput):
+                    return True
+                elif IsNo(sanitizedInput):
+                    return False
+            #elif ValiCommand: execute the command.
+            if printErrorMessageOnLoop:
+                print("Expected Yes or No input. Please try again.")
+        except Exception:
+            print("An error occurred. Please try again.")
+
+def ValidYesNo(input: str) -> bool:
+    try:
+        if not input.isalpha():
+            return False
+        if IsYes(input):
+            return True
+        if IsNo(input):
+            return True
+        return False
+    except Exception:
+        return False
+
+def IsYes(input: str) -> bool:
+    try:
+        if input == "yes":
+            return True
+        elif input == "y":
+            return True
+        elif input == "y":
+            return True
+        elif input == "true":
+            return True
+        else:
+            return False
+    except Exception:
+        return False
+
+def IsNo(input: str) -> bool:
+    try:
+        if input == "no":
+            return True
+        elif input == "n":
+            return True
+        elif input == "f":
+            return True
+        elif input == "false":
+            return True
+        else:
+            return False
+    except Exception:
+        return False
+
+# Does not return until a valid string has been input. Returns the string.
+def GetString(prompt: str, allowOtherCommands=True) -> str:
+    while(1):
+        printErrorMessageOnLoop = True
+        try:
+            pcInput = input(prompt + " ")
+            sanitizedInput = SanitizeInput(pcInput)
+            if ValidStringInput(sanitizedInput):
+                return sanitizedInput
+            #elif ValidComand: execute the command.
+            if printErrorMessageOnLoop:
+                print("Expected string input. How did you even mess this up? Please try again.")
+        except Exception:
+            print("An error occurred. Please try again.")
+
+def ValidStringInput(input: str) -> bool:
+    try:
+        if not input.isascii():
+            return False
+        if input.isspace():
+            return False
+        return True
+    except Exception:
+        return False
 # returns true if the input is a valid command matching a known command.
 # reference for a list of several showdown commands: https://www.reddit.com/r/stunfisk/comments/du77on/showdown_useful_commands_list/
 # def ValidCommand(input: str) -> bool:

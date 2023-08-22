@@ -10,6 +10,7 @@ import Player
 import CommonFunctions
 import TypeDict
 import PokemonDict
+import InputHandling
 
 '''
 Created on Aug 19, 2023
@@ -43,7 +44,9 @@ def main():
     #print(pokemon.Get("TestGrassMon").GetAllDefensiveTypeMatchupsString() + "\n")
     #print(pokemon.Get("TestIceMon").GetAllDefensiveTypeMatchupsString() + "\n")
 
-    input("Press Enter to close...")
+    InputHandling.GetInt("How many players?", maxSaneValue=10, enforcedMinimum=1)
+
+    input("Program complete. Press Enter to close...")
     sys.exit()
 
     # todo: to implement randomization of player battle order.
