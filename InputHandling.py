@@ -1,9 +1,13 @@
 # this is a file which contains functions to handle user input.
-# ALL INPUT IS SANITIZED INTO LOWER CASE!!!
+# ALL NON-STRING INPUT IS SANITIZED INTO LOWER CASE!!!
 
-# Returns a string with leading/trailing whitespace trimmed, converted to lower case for input handling purposes, and with any other necessary sanitization performed.
+# Performs string sanitization while also converting to lowercase for string comparisons on non-string input data
 def SanitizeInput(input: str) -> str:
-    return input.strip().lower()
+    return SanitizeStringInput(input).lower()
+
+# Sanitizes string input without changing string contents
+def SanitizeStringInput(input: str) -> str:
+    return input.strip()
 
 # Does not return until a valid integer has been input. Returns the int.
 def GetInt(prompt: str, allowOtherCommands=True, confirm=False, maxSaneValue=99, enforcedMinimum=-999) -> int:
@@ -106,7 +110,7 @@ def GetString(prompt: str, allowOtherCommands=True) -> str:
         printErrorMessageOnLoop = True
         try:
             pcInput = input(prompt + " ")
-            sanitizedInput = SanitizeInput(pcInput)
+            sanitizedInput = SanitizeStringInput(pcInput)
             if ValidStringInput(sanitizedInput):
                 return sanitizedInput
             #elif ValidComand: execute the command.
@@ -127,3 +131,6 @@ def ValidStringInput(input: str) -> bool:
 # returns true if the input is a valid command matching a known command.
 # reference for a list of several showdown commands: https://www.reddit.com/r/stunfisk/comments/du77on/showdown_useful_commands_list/
 # def ValidCommand(input: str) -> bool:
+
+
+# /weak command: print(pokemon.Get(Enums.PokemonName.Bulbasaur.value).GetAllDefensiveTypeMatchupsString() + "\n")

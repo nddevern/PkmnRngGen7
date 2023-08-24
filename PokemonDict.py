@@ -3,6 +3,8 @@ import Type
 import Enums
 import TypeDict
 from Pokemon import Pokemon
+import CommonFunctions
+import random
 
 # this is a wrapper class for a dictionary that contains Pokemon objects.
 # key: IntEnum.value of pokemon name (i.e. the pokedex ID of the pokemon)
@@ -11,12 +13,20 @@ from Pokemon import Pokemon
 class PokemonDict:
     def __init__(self):
         self.Dict = dict()
+    
+    def __len__(self):
+        return len(self.Dict)
 
     def Add(self, pokemonName: int, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, generation, canMega=False, hasAltForm=False):
         self.Dict[pokemonName] = Pokemon(pokemonName, type1, type2, tier, evolvesNeeded, generation, canMega)
     
     def Get(self, pokemonName: int) -> Pokemon:
         return self.Dict[pokemonName]
+    
+    def GetRandom(self) -> Pokemon:
+        keys = list(self.Dict.keys())
+        size = len(keys)
+        return self.Get(keys[random.randint(0, size-1)])
     
     def FillDict(self, types: TypeDict.TypeDict):
         #        PokemonName,                    type1, type2,                 tier, evolvesNeeded, generation, canMega(default False), hasAltForm(default False)

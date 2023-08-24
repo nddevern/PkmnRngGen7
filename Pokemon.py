@@ -7,6 +7,8 @@ import Constants
 # todo: maybe one day I could store my optimal builds in this script, then add a command called "/optimal <pkmnName>" that shows that list.
 #       if I did that, I'd have to store the optimal move spread, item, EVs/IVs, ability in this object.
 
+# Note: These should NOT hold instance variables. Each pokemon has 1 instance and when a player drafts it they are given a reference to that.
+#       Meaning two players could both have a reference to the same pokemon instance.
 class Pokemon:
     def __init__(self, pokemonId, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, generation, canMega):
         self.PokemonId = pokemonId
@@ -17,8 +19,14 @@ class Pokemon:
         self.EvolvesNeeded = evolvesNeeded
         self.Generation = generation
     
+    def GetName(self) -> str:
+        return Enums.PokemonName(self.PokemonId).name
+    
+    def __str__(self) -> str:
+        return "<Pokemon Name=" + self.GetName() + " Tier=" + self.Tier.name + ">"
+    
     def GetAllDefensiveTypeMatchupsString(self) -> str:
-        retString = str(Constants.STYLE_BRIGHT + Enums.PokemonName(self.PokemonId).name + Constants.STYLE_RESET + " - " + self.Type1.TypeName)
+        retString = str(Constants.STYLE_BRIGHT + self.GetName() + Constants.STYLE_RESET + " - " + self.Type1.TypeName)
         if not self.Type2 is None:
             retString += "/" + self.Type2.TypeName
         retString += Constants.COLOR_WEAKNESS + Constants.STYLE_BRIGHT + "\nWeaknesses" + Constants.STYLE_RESET + ": " + self.GetWeaknesses(Constants.COLOR_WEAKNESS)
