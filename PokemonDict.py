@@ -13,15 +13,23 @@ import random
 class PokemonDict:
     def __init__(self):
         self.Dict = dict()
+        self.LongestPokemonNameLength = 0
     
     def __len__(self):
         return len(self.Dict)
 
     def Add(self, pokemonName: int, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, generation, canMega=False, hasAltForm=False):
-        self.Dict[pokemonName] = Pokemon(pokemonName, type1, type2, tier, evolvesNeeded, generation, canMega)
+        pokemon = Pokemon(pokemonName, type1, type2, tier, evolvesNeeded, generation, canMega)
+        nameLength = len(pokemon.GetName())
+        if nameLength > self.LongestPokemonNameLength:
+            self.LongestPokemonNameLength = nameLength
+        self.Dict[pokemonName] = pokemon
     
     def Get(self, pokemonName: int) -> Pokemon:
         return self.Dict[pokemonName]
+    
+    def GetLongestPokemonNameLength(self) -> int:
+        return self.LongestPokemonNameLength
     
     def GetRandom(self) -> Pokemon:
         keys = list(self.Dict.keys())

@@ -1,3 +1,5 @@
+import Commands
+
 # this is a file which contains functions to handle user input.
 # ALL NON-STRING INPUT IS SANITIZED INTO LOWER CASE!!!
 
@@ -128,6 +130,22 @@ def ValidStringInput(input: str) -> bool:
         return True
     except Exception:
         return False
+
+def ExecuteCommand(prompt: str, commandHandler: Commands.CommandHandler):
+    while(1):
+        printErrorMessageOnLoop = True
+        try:
+            pcInput = input(prompt + " ")
+            sanitizedInput = SanitizeStringInput(pcInput)
+            if ValidStringInput(sanitizedInput):
+                success = commandHandler.ExecuteCommand(sanitizedInput)
+                if success:
+                    return
+            if printErrorMessageOnLoop:
+                print("Expected command input. Please try again.")
+        except Exception as e:
+            print("An error occurred: " + str(e) + ". Please try again.")
+
 # returns true if the input is a valid command matching a known command.
 # reference for a list of several showdown commands: https://www.reddit.com/r/stunfisk/comments/du77on/showdown_useful_commands_list/
 # def ValidCommand(input: str) -> bool:

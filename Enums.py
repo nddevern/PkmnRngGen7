@@ -1,8 +1,8 @@
-from enum import IntEnum
+import enum
 
 # docs: https://docs.python.org/3/library/enum.html#programmatic-access-to-enumeration-members-and-their-attributes
 
-class TypeName(IntEnum):
+class TypeName(enum.IntEnum):
     INVALID = 0
     Normal = 1
     Fire = 2
@@ -23,7 +23,7 @@ class TypeName(IntEnum):
     Steel = 17
     Fairy = 18
 
-class Tier(IntEnum):# Lower is better
+class Tier(enum.IntEnum):# Lower is better
     INVALID = 0
     AG = 1
     Uber = 2
@@ -41,7 +41,13 @@ class Tier(IntEnum):# Lower is better
     NFE = 14
     LC = 15
 
-class PokemonName(IntEnum):
+class Commands(enum.Enum):
+    INVALID = ""
+    DRAFT = "/draft"
+    WEAK = "/weak"
+
+
+class PokemonName(enum.IntEnum):
     INVALID = 0
     Bulbasaur = 1
     Ivysaur = 2
