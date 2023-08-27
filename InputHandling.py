@@ -12,16 +12,21 @@ def SanitizeStringInput(input: str) -> str:
     return input.strip()
 
 # Does not return until a valid integer has been input. Returns the int.
-def GetInt(prompt: str, allowOtherCommands=True, confirm=False, maxSaneValue=99, enforcedMinimum=-999) -> int:
+def GetInt(prompt: str, allowOtherCommands=True, confirm=False, maxSaneValue=99, enforcedMinimum=-999, enforcedMaximum=999) -> int:
     while(1):
         printErrorMessageOnLoop = True
         try:
             pcInput = input(prompt + " ")
             sanitizedInput = SanitizeInput(pcInput)
-            if ValidInt(sanitizedInput, enforcedMinimum=enforcedMinimum):
+            if ValidInt(sanitizedInput, enforcedMinimum, enforcedMaximum):
                 finalInput = int(sanitizedInput)
                 if finalInput > maxSaneValue:
                     if GetYesOrNo("High input value detected. Are you sure you meant " + str(finalInput) + "?"):
+                        return finalInput
+                    else: 
+                        printErrorMessageOnLoop = False
+                if confirm:
+                    if GetYesOrNo("Are you sure you want " + str(finalInput) + "?"):
                         return finalInput
                     else: 
                         printErrorMessageOnLoop = False
@@ -35,12 +40,14 @@ def GetInt(prompt: str, allowOtherCommands=True, confirm=False, maxSaneValue=99,
             print("An error occurred. Please try again.")
 
 # returns true if the input is a valid integer, false otherwise.
-def ValidInt(input: str, enforcedMinimum) -> bool:
+def ValidInt(input: str, enforcedMinimum: int, enforcedMaximum: int) -> bool:
     try:
         if not input.isalnum():
             return False
         returnedValue = int(input)
         if returnedValue < enforcedMinimum:
+            return False
+        if returnedValue > enforcedMaximum:
             return False
         return True
     except ValueError:
@@ -107,14 +114,18 @@ def IsNo(input: str) -> bool:
         return False
 
 # Does not return until a valid string has been input. Returns the string.
-def GetString(prompt: str, allowOtherCommands=True) -> str:
+def GetString(prompt: str, allowOtherCommands=True, maxLength=99) -> str:
     while(1):
         printErrorMessageOnLoop = True
         try:
             pcInput = input(prompt + " ")
             sanitizedInput = SanitizeStringInput(pcInput)
             if ValidStringInput(sanitizedInput):
-                return sanitizedInput
+                if len(sanitizedInput) > maxLength:
+                    print("The given input is too long! Should be no more than " + maxLength + " characters.")
+                    printErrorMessageOnLoop = False
+                else:
+                    return sanitizedInput
             #elif ValidComand: execute the command.
             if printErrorMessageOnLoop:
                 print("Expected string input. How did you even mess this up? Please try again.")

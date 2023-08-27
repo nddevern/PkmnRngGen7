@@ -23,8 +23,9 @@ class TypeName(enum.IntEnum):
     Steel = 17
     Fairy = 18
 
+# I have the longest tier name length set to 4
 class Tier(enum.IntEnum):# Lower is better
-    INVALID = 0
+    ERR = 0
     AG = 1
     Uber = 2
     OU = 3
