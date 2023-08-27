@@ -29,6 +29,7 @@ def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict
         PrintUndraftedPokemonList(availablePokemon, longestPokemonNameLength)
 
         # HANDLE CHOOSING A POKEMON
+        print("It's " + players[currentPlayerIndex].Name + "'s turn.")
         selectedIndex = InputHandling.GetInt("Please enter the number of the Pokemon you'd like to draft:", confirm=True, enforcedMinimum=1, enforcedMaximum=len(availablePokemon))-1
         players[currentPlayerIndex].AddPokemon(availablePokemon.pop(selectedIndex))
         currentPlayerIndex += currentPlayerIndexVelocity
@@ -44,8 +45,11 @@ def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict
     print("ALL POKEMON DRAFTED:")
     PrintDraftPlayerList(players, longestPokemonNameLength, -2)
 
-    InputHandling.GetYesOrNo("Please confirm when all players have completed teambuilding")
-    InputHandling.GetYesOrNo("You're sure of this?")
+    teambuildingComplete = False
+    while(not teambuildingComplete):
+        if InputHandling.GetYesOrNo("Please confirm when all players have completed teambuilding"):
+            if InputHandling.GetYesOrNo("You're sure of this?"):
+                teambuildingComplete = True
 
     # todo implement randomization of game play order
 
@@ -242,7 +246,7 @@ def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemo
     digitsOfMaxIndex = len(str(len(availablePokemon)-1))#length of the string representation of the max index into available pokemon
     if pokemonIndex < len(availablePokemon):
         pokemon = availablePokemon[pokemonIndex]
-        indexPart = "[" + str(pokemonIndex+1) + "]" 
-        return indexPart.rjust(digitsOfMaxIndex+2) + " " + pokemon.Tier.name.ljust(5) + pokemon.GetName().ljust(longestPokemonNameLength+2)
+        indexPart = "[" + str(pokemonIndex+1) + "]"
+        return indexPart.rjust(digitsOfMaxIndex+2) + "  " + CommonFunctions.GetTierPrintString(pokemon.Tier).rjust(4) + "  " + pokemon.GetName().ljust(longestPokemonNameLength+5)
     else:
-        return "".ljust(longestPokemonNameLength+digitsOfMaxIndex+9)
+        return ""

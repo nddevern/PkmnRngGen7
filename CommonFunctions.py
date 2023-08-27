@@ -41,3 +41,13 @@ def PrintList(list: list):
         retString += list[i].__str__()
         isFirstEntry = False
     print(retString + "]")
+
+def GetTierPrintString(tier: Enums.Tier) -> str:
+    if tier == Enums.Tier.BelowOU:
+        return "(OU)"
+    elif tier == Enums.Tier.BelowPU:
+        return "(PU)"
+    elif tier == Enums.Tier.INVALID:
+        return "???"
+    else:
+        return tier.name

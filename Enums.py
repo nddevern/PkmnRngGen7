@@ -25,7 +25,7 @@ class TypeName(enum.IntEnum):
 
 # I have the longest tier name length set to 4
 class Tier(enum.IntEnum):# Lower is better
-    ERR = 0
+    INVALID = 0
     AG = 1
     Uber = 2
     OU = 3
@@ -857,5 +857,3 @@ class PokemonName(enum.IntEnum):
     Stakataka = 805
     Blacephalon = 806
     Zeraora = 807
-    Meltan = 808
-    Melmetal = 809
