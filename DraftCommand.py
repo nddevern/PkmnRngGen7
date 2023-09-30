@@ -234,19 +234,22 @@ def PrintUndraftedPokemonRow(availablePokemon: list[Pokemon.Pokemon], longestPok
     printString += pokemonPrintString
 
     # col 4
-    pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, 3*colSize+currentRow)
+    pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, 3*colSize+currentRow, includeTrailingSpaces=False)
     if not pokemonPrintString.isspace():
         printedPokemon += 1
     printString += pokemonPrintString
     print(printString)
     return printedPokemon
 
-def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, pokemonIndex: int) -> str:
+def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, pokemonIndex: int, includeTrailingSpaces=True) -> str:
     #extra spaces added to ljusts to avoid + " " + 
     digitsOfMaxIndex = len(str(len(availablePokemon)-1))#length of the string representation of the max index into available pokemon
     if pokemonIndex < len(availablePokemon):
         pokemon = availablePokemon[pokemonIndex]
         indexPart = "[" + str(pokemonIndex+1) + "]"
-        return indexPart.rjust(digitsOfMaxIndex+2) + "  " + CommonFunctions.GetTierPrintString(pokemon.Tier).rjust(4) + "  " + pokemon.GetName().ljust(longestPokemonNameLength+5)
+        pokemonNameString = pokemon.GetName().ljust(longestPokemonNameLength+5)
+        if not includeTrailingSpaces:
+            pokemonNameString = pokemon.GetName()
+        return indexPart.rjust(digitsOfMaxIndex+2) + "  " + CommonFunctions.GetTierPrintString(pokemon.Tier).rjust(4) + "  " + pokemonNameString
     else:
         return ""

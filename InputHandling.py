@@ -149,9 +149,7 @@ def ExecuteCommand(prompt: str, commandHandler: Commands.CommandHandler):
             pcInput = input(prompt + " ")
             sanitizedInput = SanitizeStringInput(pcInput)
             if ValidStringInput(sanitizedInput):
-                success = commandHandler.ExecuteCommand(sanitizedInput)
-                if success:
-                    return
+                return commandHandler.ExecuteCommand(sanitizedInput)
             if printErrorMessageOnLoop:
                 print("Expected command input. Please try again.")
         except Exception as e:

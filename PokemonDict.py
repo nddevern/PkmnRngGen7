@@ -25,8 +25,15 @@ class PokemonDict:
             self.LongestPokemonNameLength = nameLength
         self.Dict[pokemonName] = pokemon
     
-    def Get(self, pokemonName: int) -> Pokemon:
-        return self.Dict[pokemonName]
+    def Get(self, pokeonId: int) -> Pokemon:
+        return self.Dict[pokeonId]
+    
+    # THIS METHOD IS CASE SENSITIVE except for the first letter of the string.
+    def GetByName(self, pokemonName: str) -> Pokemon:
+        pokemonName = pokemonName.strip()
+        formattedPokemonName = pokemonName[0].upper() + pokemonName[1:]#capitalize the first letter of the string to increase the odds of matching the correct pokemon
+        pokemonId = Enums.PokemonName[formattedPokemonName].value
+        return self.Get(pokemonId)
     
     def GetLongestPokemonNameLength(self) -> int:
         return self.LongestPokemonNameLength

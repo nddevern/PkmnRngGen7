@@ -46,6 +46,8 @@ class Commands(enum.Enum):
     INVALID = ""
     DRAFT = "/draft"
     WEAK = "/weak"
+    QUIT = "/quit"
+    EXIT = "/exit"
 
 
 class PokemonName(enum.IntEnum):

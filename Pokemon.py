@@ -22,9 +22,11 @@ class Pokemon:
     def GetName(self) -> str:
         return Enums.PokemonName(self.PokemonId).name
     
+    # debug
     def __str__(self) -> str:
         return "<Pokemon Name=" + self.GetName() + " Tier=" + self.Tier.name + ">"
     
+    # THE REST OF THIS FILE IS ALL DEDICATED TO THE /WEAK COMMAND
     def GetAllDefensiveTypeMatchupsString(self) -> str:
         retString = str(Constants.STYLE_BRIGHT + self.GetName() + Constants.STYLE_RESET + " - " + self.Type1.TypeName)
         if not self.Type2 is None:

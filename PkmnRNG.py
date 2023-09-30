@@ -36,7 +36,9 @@ def main():
     commandHandler = Commands.CommandHandler(pokemonDict, typeDict)
 
     print("INITIALIZATION COMPLETE.\n\n")
-    InputHandling.ExecuteCommand("Please enter a command.\n", commandHandler)
+    commandResult = True
+    while (commandResult == True):
+        commandResult = InputHandling.ExecuteCommand("Please enter a command.\n", commandHandler)
     
 
     input("Program complete. Press Enter to close...")

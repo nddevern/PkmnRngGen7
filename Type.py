@@ -8,6 +8,7 @@ class Type:
         self.Resistances = resistances# list of TypeName
         self.Immunities = immunities# list of TypeName
     
+    # THE REST OF THIS FILE DEDICATED TO THE /WEAK COMMAND
     def GetTypesToPrint(self, outputDict: dict, listToPrint: list[Enums.TypeName], firstExcludedList: list[Enums.TypeName], secondExcludedList: list[Enums.TypeName]) -> dict:
         outputDict = self.GetListToPrint(outputDict, listToPrint)
         outputDict = self.ExcludeTypesFromList(outputDict, firstExcludedList)
