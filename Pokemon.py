@@ -20,7 +20,11 @@ class Pokemon:
         self.Generation = generation
     
     def GetName(self) -> str:
-        return Enums.PokemonName(self.PokemonId).name
+        retString = Enums.PokemonName(self.PokemonId).name
+        retString = retString.replace("Female", "♀")
+        retString = retString.replace("Male", "♂")
+        retString = retString.replace("_", "-")
+        return retString
     
     # debug
     def __str__(self) -> str:
