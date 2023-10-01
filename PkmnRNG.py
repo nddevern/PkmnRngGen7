@@ -24,6 +24,7 @@ def main():
     print("  Building Pokemon data...")
     pokemonDict = PokemonDict.PokemonDict()# This is a dictionary so that pokemon weakness lookups are fast.
     pokemonDict.FillDict(typeDict)
+    pokemonDict.CheckForCircularEvolutions()
 
     commandHandler = Commands.CommandHandler(pokemonDict, typeDict)
 

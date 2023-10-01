@@ -25,8 +25,21 @@ class PokemonDict:
             self.LongestPokemonNameLength = nameLength
         self.Dict[pokemonId] = pokemon
     
-    def Get(self, pokeonId: int) -> Pokemon:
-        return self.Dict[pokeonId]
+    def CheckForCircularEvolutions(self):
+        for key in list(self.Dict.keys()):
+            pokemon = self.Get(key)
+            if (pokemon.EvolvesIntoPokemonId == pokemon.PokemonId):
+                print("ERROR: circular pokemon evolution detected: Pokemon " + str(pokemon.PokemonId) + "evolves into itself!")
+            if (pokemon.EvolvesIntoPokemonId <= 0):
+                continue
+            evolvesInto = self.Get(pokemon.EvolvesIntoPokemonId)
+            if (evolvesInto.EvolvesIntoPokemonId == pokemon.PokemonId):
+                print("ERROR: circular pokemon evolution detected: Pokemon " + str(pokemon.PokemonId) + "'s evolution evolves back into itself!")
+        
+
+    
+    def Get(self, pokemonId: int) -> Pokemon:
+        return self.Dict[pokemonId]
     
     # THIS METHOD IS CASE SENSITIVE except for the first letter of the string.
     def GetByName(self, pokemonName: str) -> Pokemon:
@@ -229,7 +242,7 @@ class PokemonDict:
         self.Add(Enums.PokemonName.Bellossom.value, types.Grass, None, Enums.Tier.BelowPU, -1, 2, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Marill.value, types.Water, types.Fairy, Enums.Tier.NFE, 184, 2, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Azumarill.value, types.Water, types.Fairy, Enums.Tier.OU, -1, 2, False, Enums.Tier.INVALID)
-        self.Add(Enums.PokemonName.Sudowoodo.value, types.Rock, None, Enums.Tier.BelowPU, 438, 2, False, Enums.Tier.INVALID)
+        self.Add(Enums.PokemonName.Sudowoodo.value, types.Rock, None, Enums.Tier.BelowPU, -1, 2, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Politoed.value, types.Water, None, Enums.Tier.BelowPU, -1, 2, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Hoppip.value, types.Grass, types.Flying, Enums.Tier.LC, 188, 2, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Skiploom.value, types.Grass, types.Flying, Enums.Tier.NFE, 189, 2, False, Enums.Tier.INVALID)
@@ -505,7 +518,7 @@ class PokemonDict:
         self.Add(Enums.PokemonName.Mantyke.value, types.Water, types.Flying, Enums.Tier.LC, 226, 4, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Snover.value, types.Grass, types.Ice, Enums.Tier.LC, 460, 4, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Abomasnow.value, types.Grass, types.Ice, Enums.Tier.PU, -1, 4, True, Enums.Tier.NU)
-        self.Add(Enums.PokemonName.Weavile.value, types.Dark, types.Ice, Enums.Tier.UUBL, 215, 4, False, Enums.Tier.INVALID)
+        self.Add(Enums.PokemonName.Weavile.value, types.Dark, types.Ice, Enums.Tier.UUBL, -1, 4, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Magnezone.value, types.Electric, types.Steel, Enums.Tier.OU, -1, 4, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Lickilicky.value, types.Normal, None, Enums.Tier.BelowPU, -1, 4, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Rhyperior.value, types.Ground, types.Rock, Enums.Tier.RU, -1, 4, False, Enums.Tier.INVALID)

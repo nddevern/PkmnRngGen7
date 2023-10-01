@@ -82,60 +82,49 @@ def GeneratePokemon(pokemonDict: PokemonDict.PokemonDict, playerCount: int) -> l
     return availablePokemon
 
 # Thanks to Mohit Kumra: https://www.geeksforgeeks.org/insertion-sort/
+def SortAvailablePokemonList(availablePokemon: list[Pokemon.Pokemon], pokemonDict: PokemonDict.PokemonDict) -> list[Pokemon.Pokemon]:
+    for i in range(1, len(availablePokemon)):
+        temp = availablePokemon[i]
+        j = i-1
+        while (j >= 0 and ComparePokemon(temp, availablePokemon[j], pokemonDict) < 0):
+            availablePokemon[j+1] = availablePokemon[j]
+            j -= 1
+        availablePokemon[j+1] = temp
+    
+    return availablePokemon
+
+# returns -1 if pokemon1 < pokemon2, 
+#          0 if pokemon1 = pokemon2,
+#          1 if pokemon1 > pokemon2
+# the sorting function sorts ascending, so return -1 if it should be earlier in the list.
+
 # Our sort priority:
 # 1. Max potential tier desc
 # 2. Evolves Needed asc
 # 3. Current tier desc
 # 4. Alphabetical
-# THIS FUNCTION IS CURRENTLY BROKEN.
-def SortAvailablePokemonList(availablePokemon: list[Pokemon.Pokemon], pokemonDict: PokemonDict.PokemonDict) -> list[Pokemon.Pokemon]:
-    for i in range(1, len(availablePokemon)):
-        temp = availablePokemon[i]
-        j = i-1
-        while j >= 0:
-            pokemonAtj = availablePokemon[j]
-            tempFinalForm = temp.GetFinalForm(pokemonDict)
-            pokemonAtjFinalForm = pokemonAtj.GetFinalForm(pokemonDict)
-            tempFinalFormGetMegaTierElseMyTier = tempFinalForm.GetMegaTierElseMyTier()
-            pokemonAtjFinalFormGetMegaTierElseMyTier = pokemonAtjFinalForm.GetMegaTierElseMyTier()
-            definitelyDontSwap = False
-            
-            # max potential tier
-            if (temp.GetFinalForm(pokemonDict).GetMegaTierElseMyTier() > availablePokemon[j].GetFinalForm(pokemonDict).GetMegaTierElseMyTier()):
-                break
-            elif (temp.GetFinalForm(pokemonDict).GetMegaTierElseMyTier() < availablePokemon[j].GetFinalForm(pokemonDict).GetMegaTierElseMyTier()):
-                availablePokemon[j+1] = availablePokemon[j]
-                j -= 1
-                continue
+def ComparePokemon(pokemon1: Pokemon.Pokemon, pokemon2: Pokemon.Pokemon, pokemonDict: PokemonDict.PokemonDict) -> int:
+    pokemon1HighestTier = pokemon1.GetFinalForm(pokemonDict).GetMegaTierElseMyTier()
+    pokemon2HighestTier = pokemon2.GetFinalForm(pokemonDict).GetMegaTierElseMyTier()
 
-            # evolves needed
-            if (temp.GetEvolvesNeeded(pokemonDict) > availablePokemon[j].GetEvolvesNeeded(pokemonDict)): 
-                break
-            elif (temp.GetEvolvesNeeded(pokemonDict) < availablePokemon[j].GetEvolvesNeeded(pokemonDict)):
-                availablePokemon[j+1] = availablePokemon[j]
-                j -= 1
-                continue
-
-            # current tier
-            if (temp.Tier > availablePokemon[j].Tier): 
-                break
-            elif (temp.Tier < availablePokemon[j].Tier):
-                availablePokemon[j+1] = availablePokemon[j]
-                j -= 1
-                continue
-
-            # alphabetical
-            if (temp.GetName() > availablePokemon[j].GetName()): 
-                break
-            elif (temp.GetName() < availablePokemon[j].GetName()):
-                availablePokemon[j+1] = availablePokemon[j]
-                j -= 1
-                continue
-            break
-        availablePokemon[j+1] = temp
-        
-    
-    return availablePokemon
+    if (pokemon1HighestTier < pokemon2HighestTier):
+        return -1
+    elif (pokemon1HighestTier > pokemon2HighestTier):
+        return 1
+    elif(pokemon1.GetEvolvesNeeded(pokemonDict) < pokemon2.GetEvolvesNeeded(pokemonDict)):
+        return -1
+    elif(pokemon1.GetEvolvesNeeded(pokemonDict) > pokemon2.GetEvolvesNeeded(pokemonDict)):
+        return 1
+    elif(pokemon1.Tier < pokemon2.Tier):
+        return -1
+    elif(pokemon1.Tier > pokemon2.Tier):
+        return 1
+    elif(pokemon1.GetName() < pokemon2.GetName()):
+        return -1
+    elif(pokemon1.GetName() > pokemon2.GetName()):
+        return 1
+    else:
+        return 0
 
 def GetLongestPlayerName(players: list[Player.Player]) -> int:
     longestPlayerNameLength = 0
