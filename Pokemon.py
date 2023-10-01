@@ -3,6 +3,7 @@ import Type
 import Enums
 import CommonFunctions
 import Constants
+import PokemonDict
 
 # todo: maybe one day I could store my optimal builds in this script, then add a command called "/optimal <pkmnName>" that shows that list.
 #       if I did that, I'd have to store the optimal move spread, item, EVs/IVs, ability in this object.
@@ -10,14 +11,15 @@ import Constants
 # Note: These should NOT hold instance variables. Each pokemon has 1 instance and when a player drafts it they are given a reference to that.
 #       Meaning two players could both have a reference to the same pokemon instance.
 class Pokemon:
-    def __init__(self, pokemonId, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesNeeded, generation, canMega):
+    def __init__(self, pokemonId, type1: Type.Type, type2: Type.Type, tier: Enums.Tier, evolvesIntoPokemonId, generation, canMega, megaTier: Enums.Tier):
         self.PokemonId = pokemonId
         self.Type1 = type1
         self.Type2 = type2
         self.Tier = tier
         self.CanMega = canMega
-        self.EvolvesNeeded = evolvesNeeded
+        self.EvolvesIntoPokemonId = evolvesIntoPokemonId
         self.Generation = generation
+        self.MegaTier = megaTier
     
     def GetName(self) -> str:
         retString = Enums.PokemonName(self.PokemonId).name
@@ -31,6 +33,26 @@ class Pokemon:
         retString = retString.replace("MimeJr", "Mime Jr.")
         retString = retString.replace("Farfetchd", "Farfetch'd")
         return retString
+    
+    def GetEvolvesNeeded(self, pokemonDict: PokemonDict.PokemonDict) -> int:
+        currentPokemon = self
+        evolvesNeeded = 0
+        while(currentPokemon.EvolvesIntoPokemonId > 0):
+            currentPokemon = pokemonDict.Get(currentPokemon.EvolvesIntoPokemonId)
+            evolvesNeeded += 1
+        return evolvesNeeded
+    
+    def GetFinalForm(self, pokemonDict: PokemonDict.PokemonDict) -> Pokemon.Pokemon:
+        currentPokemon = self
+        while(currentPokemon.EvolvesIntoPokemonId > 0):
+            currentPokemon = pokemonDict.Get(currentPokemon.EvolvesIntoPokemonId)
+        return currentPokemon
+    
+    def GetMegaTierElseMyTier(self) -> Enums.Tier:
+        if (self.CanMega):
+            return self.MegaTier
+        else:
+            return self.Tier
     
     # debug
     def __str__(self) -> str:

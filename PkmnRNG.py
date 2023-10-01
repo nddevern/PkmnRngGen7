@@ -11,14 +11,6 @@ Created on Aug 19, 2023
 @author: Nodever2
 '''
 
-'''##########################################
-############ Beginning of config ############
-##########################################'''
-NUM_COLUMNS = 3
-'''##########################################
-############### End of config ###############
-##########################################'''
-
 #todo: re-format this project to have all other files in a package. see https://docs.python.org/3/tutorial/modules.html#packages
 #                                                                   and https://stackoverflow.com/questions/1260792/import-a-file-from-a-subdirectory
 
@@ -33,7 +25,7 @@ def main():
     pokemonDict = PokemonDict.PokemonDict()# This is a dictionary so that pokemon weakness lookups are fast.
     pokemonDict.FillDict(typeDict)
 
-    commandHandler = Commands.CommandHandler(pokemonDict, typeDict, NUM_COLUMNS)
+    commandHandler = Commands.CommandHandler(pokemonDict, typeDict)
 
     print("INITIALIZATION COMPLETE.\n\n")
     commandResult = True

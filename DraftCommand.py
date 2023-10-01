@@ -7,9 +7,11 @@ import InputHandling
 import TypeDict
 import Enums
 import math
+import Type
+import ConfigSettings
 
 # return true if successful
-def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict.TypeDict, NUMCOLUMNS) -> bool:
+def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict.TypeDict) -> bool:
     print("BEGINNING DRAFT.")
     players = GetPlayers()
 
@@ -26,7 +28,7 @@ def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict
         PrintDraftPlayerList(players, longestPokemonNameLength, currentPlayerIndex)
 
         # PRINT POKEMON INFO
-        PrintUndraftedPokemonList(availablePokemon, longestPokemonNameLength, NUMCOLUMNS)
+        PrintUndraftedPokemonList(availablePokemon, pokemonDict, longestPokemonNameLength)
 
         # HANDLE CHOOSING A POKEMON
         print("It's " + players[currentPlayerIndex].Name + "'s turn.")
@@ -76,18 +78,62 @@ def GeneratePokemon(pokemonDict: PokemonDict.PokemonDict, playerCount: int) -> l
     availablePokemon = []
     for i in range(numPokemonToGenerate):
         availablePokemon.append(pokemonDict.GetRandom())
-    availablePokemon = SortAvailablePokemonByTierThenByName(availablePokemon)
+    availablePokemon = SortAvailablePokemonList(availablePokemon, pokemonDict)
     return availablePokemon
 
 # Thanks to Mohit Kumra: https://www.geeksforgeeks.org/insertion-sort/
-def SortAvailablePokemonByTierThenByName(availablePokemon: list[Pokemon.Pokemon]) -> list[Pokemon.Pokemon]:
+# Our sort priority:
+# 1. Max potential tier desc
+# 2. Evolves Needed asc
+# 3. Current tier desc
+# 4. Alphabetical
+# THIS FUNCTION IS CURRENTLY BROKEN.
+def SortAvailablePokemonList(availablePokemon: list[Pokemon.Pokemon], pokemonDict: PokemonDict.PokemonDict) -> list[Pokemon.Pokemon]:
     for i in range(1, len(availablePokemon)):
         temp = availablePokemon[i]
         j = i-1
-        while j >= 0 and (temp.Tier < availablePokemon[j].Tier or (temp.Tier == availablePokemon[j].Tier and temp.GetName() < availablePokemon[j].GetName())):
-            availablePokemon[j+1] = availablePokemon[j]
-            j -= 1
-        availablePokemon[j + 1] = temp
+        while j >= 0:
+            pokemonAtj = availablePokemon[j]
+            tempFinalForm = temp.GetFinalForm(pokemonDict)
+            pokemonAtjFinalForm = pokemonAtj.GetFinalForm(pokemonDict)
+            tempFinalFormGetMegaTierElseMyTier = tempFinalForm.GetMegaTierElseMyTier()
+            pokemonAtjFinalFormGetMegaTierElseMyTier = pokemonAtjFinalForm.GetMegaTierElseMyTier()
+            definitelyDontSwap = False
+            
+            # max potential tier
+            if (temp.GetFinalForm(pokemonDict).GetMegaTierElseMyTier() > availablePokemon[j].GetFinalForm(pokemonDict).GetMegaTierElseMyTier()):
+                break
+            elif (temp.GetFinalForm(pokemonDict).GetMegaTierElseMyTier() < availablePokemon[j].GetFinalForm(pokemonDict).GetMegaTierElseMyTier()):
+                availablePokemon[j+1] = availablePokemon[j]
+                j -= 1
+                continue
+
+            # evolves needed
+            if (temp.GetEvolvesNeeded(pokemonDict) > availablePokemon[j].GetEvolvesNeeded(pokemonDict)): 
+                break
+            elif (temp.GetEvolvesNeeded(pokemonDict) < availablePokemon[j].GetEvolvesNeeded(pokemonDict)):
+                availablePokemon[j+1] = availablePokemon[j]
+                j -= 1
+                continue
+
+            # current tier
+            if (temp.Tier > availablePokemon[j].Tier): 
+                break
+            elif (temp.Tier < availablePokemon[j].Tier):
+                availablePokemon[j+1] = availablePokemon[j]
+                j -= 1
+                continue
+
+            # alphabetical
+            if (temp.GetName() > availablePokemon[j].GetName()): 
+                break
+            elif (temp.GetName() < availablePokemon[j].GetName()):
+                availablePokemon[j+1] = availablePokemon[j]
+                j -= 1
+                continue
+            break
+        availablePokemon[j+1] = temp
+        
     
     return availablePokemon
 
@@ -201,25 +247,25 @@ def GetPlayerPokemonName(player: Player.Player, playerPokemonIndex: int) -> str:
 # desired format:
 # 4 columns (TBD)
 # [1] Uber PokemonName [4] OU   PokemonName
-def PrintUndraftedPokemonList(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, NUMCOLUMNS):
+def PrintUndraftedPokemonList(availablePokemon: list[Pokemon.Pokemon], pokemonDict: PokemonDict.PokemonDict, longestPokemonNameLength: int):
     printedPokemon = 0
     i = 0
     while printedPokemon < len(availablePokemon):
-        printedPokemon = PrintUndraftedPokemonRow(availablePokemon, longestPokemonNameLength, i, printedPokemon, NUMCOLUMNS)
+        printedPokemon = PrintUndraftedPokemonRow(availablePokemon, pokemonDict, longestPokemonNameLength, i, printedPokemon)
         i += 1
     print("")
 
 
-def PrintUndraftedPokemonRow(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, currentRow: int, printedPokemon: int, NUMCOLUMNS) -> int:
+def PrintUndraftedPokemonRow(availablePokemon: list[Pokemon.Pokemon], pokemonDict: PokemonDict.PokemonDict, longestPokemonNameLength: int, currentRow: int, printedPokemon: int) -> int:
     printString = ""
     availablePokemonCount = len(availablePokemon)
-    colSize = math.ceil(availablePokemonCount/NUMCOLUMNS)
+    colSize = math.ceil(availablePokemonCount/ConfigSettings.NUM_COLUMNS)
 
-    for i in range(NUMCOLUMNS):
+    for i in range(ConfigSettings.NUM_COLUMNS):
         includeTrailingSpaces = True
-        if (i == (NUMCOLUMNS-1)):
+        if (i == (ConfigSettings.NUM_COLUMNS-1)):
             includeTrailingSpaces = False
-        pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, i*colSize+currentRow, includeTrailingSpaces)
+        pokemonPrintString = GetPokemonPrintString(availablePokemon, pokemonDict, longestPokemonNameLength, i*colSize+currentRow, includeTrailingSpaces)
         if not pokemonPrintString.isspace():
             printedPokemon += 1
         printString += pokemonPrintString    
@@ -227,7 +273,7 @@ def PrintUndraftedPokemonRow(availablePokemon: list[Pokemon.Pokemon], longestPok
     print(printString)
     return printedPokemon
 
-def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, pokemonIndex: int, includeTrailingSpaces=True) -> str:
+def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], pokemonDict: PokemonDict.PokemonDict, longestPokemonNameLength: int, pokemonIndex: int, includeTrailingSpaces=True) -> str:
     #extra spaces added to ljusts to avoid + " " + 
     
     if pokemonIndex >= len(availablePokemon):
@@ -238,17 +284,14 @@ def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemo
     # index part
     digitsOfMaxIndex = len(str(len(availablePokemon)))#length of the string representation of the max displayed number into available pokemon
     retString += ("[" + str(pokemonIndex+1) + "]").rjust(digitsOfMaxIndex+2) + "  "
+    
+    # pokemon types part
+    if (ConfigSettings.DISPLAY_UNDRAFTED_POKEMON_TYPES):
+        retString += GetTypePrintString(pokemon.Type1) + " "
+        retString += GetTypePrintString(pokemon.Type2) + "  "
 
     # pokemon tier part
-    #  current tier
-    retString += CommonFunctions.GetTierPrintString(pokemon.Tier).rjust(4)
-    #  arrow
-    needsMegaString = "-"
-    if (pokemon.CanMega):
-        needsMegaString = "M"
-    retString += " -" + str(pokemon.EvolvesNeeded) + needsMegaString + "> "
-    #  max potential tier
-    retString += "TODO" + "  "
+    retString += GetPotentialPokemonInfoString(pokemon, pokemonDict)
 
     # pokemon name part
     pokemonNameString = pokemon.GetName()
@@ -257,3 +300,82 @@ def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemo
     retString += pokemonNameString + "  "
 
     return retString
+
+def GetPotentialPokemonInfoString(pokemon: Pokemon.Pokemon, pokemonDict: PokemonDict.PokemonDict) -> str:
+    retString = ""
+    
+    # current tier
+    retString += CommonFunctions.GetTierPrintString(pokemon.Tier).rjust(4)
+
+    if (not ConfigSettings.DISPLAY_UNDRAFTED_POKEMON_EVOLUTION_INFO):
+        return retString + "  "
+
+    # if their current pokemon is max evolve and cannot mega, skip arrow/potential and draw spaces.
+    if (not pokemon.CanMega and pokemon.EvolvesIntoPokemonId <= 0):
+        return retString.rjust(14) + "  "
+
+    # arrow
+    #  numEvolvesNeeded
+    pokemonEvolvesNeeded = pokemon.GetEvolvesNeeded(pokemonDict)
+    evolvesNeededString = "-"
+    if (pokemonEvolvesNeeded > 0):
+        evolvesNeededString = str(pokemonEvolvesNeeded)
+    
+    #  canMega
+    finalEvolution = pokemon.GetFinalForm(pokemonDict)
+    canMegaString = "-"
+    if (finalEvolution.CanMega):
+        canMegaString = "M"
+    if (finalEvolution.PokemonId == Enums.PokemonName.Groudon.value or finalEvolution.PokemonId == Enums.PokemonName.Kyogre.value):
+        canMegaString = "P"
+    retString += " -" + evolvesNeededString + canMegaString + "> "
+    
+    # max potential tier
+    retString += CommonFunctions.GetTierPrintString(finalEvolution.GetMegaTierElseMyTier()).rjust(4)
+    return retString + "  "
+
+def GetTypePrintString(typeObj: Type.Type) -> str:
+    if typeObj is None:
+        return "   "
+    type = typeObj.TypeName
+    if type is None:
+        return "   "
+    elif type == Enums.TypeName.Normal.name:
+        return "NOR"
+    elif type == Enums.TypeName.Fire.name:
+        return "FIR"
+    elif type == Enums.TypeName.Water.name:
+        return "WAT"
+    elif type == Enums.TypeName.Electric.name:
+        return "ELE"
+    elif type == Enums.TypeName.Grass.name:
+        return "GRA"
+    elif type == Enums.TypeName.Ice.name:
+        return "ICE"
+    elif type == Enums.TypeName.Fighting.name:
+        return "FIG"
+    elif type == Enums.TypeName.Poison.name:
+        return "POI"
+    elif type == Enums.TypeName.Ground.name:
+        return "GRO"
+    elif type == Enums.TypeName.Flying.name:
+        return "FLY"
+    elif type == Enums.TypeName.Psychic.name:
+        return "PSY"
+    elif type == Enums.TypeName.Bug.name:
+        return "BUG"
+    elif type == Enums.TypeName.Rock.name:
+        return "ROC"
+    elif type == Enums.TypeName.Ghost.name:
+        return "GHO"
+    elif type == Enums.TypeName.Dragon.name:
+        return "DRA"
+    elif type == Enums.TypeName.Dark.name:
+        return "DAR"
+    elif type == Enums.TypeName.Steel.name:
+        return "STE"
+    elif type == Enums.TypeName.Fairy.name:
+        return "FAI"
+    else:
+        return "   "
+    
