@@ -236,7 +236,7 @@ def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemo
     pokemon = availablePokemon[pokemonIndex]
 
     # index part
-    digitsOfMaxIndex = len(str(len(availablePokemon)-1))#length of the string representation of the max index into available pokemon
+    digitsOfMaxIndex = len(str(len(availablePokemon)))#length of the string representation of the max displayed number into available pokemon
     retString += ("[" + str(pokemonIndex+1) + "]").rjust(digitsOfMaxIndex+2) + "  "
 
     # pokemon tier part
@@ -246,14 +246,14 @@ def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemo
     needsMegaString = "-"
     if (pokemon.CanMega):
         needsMegaString = "M"
-    retString += "-" + str(pokemon.EvolvesNeeded) + needsMegaString + ">"
+    retString += " -" + str(pokemon.EvolvesNeeded) + needsMegaString + "> "
     #  max potential tier
     retString += "TODO" + "  "
 
     # pokemon name part
     pokemonNameString = pokemon.GetName()
     if includeTrailingSpaces:
-        pokemonNameString = pokemonNameString.ljust(longestPokemonNameLength+5)
+        pokemonNameString = pokemonNameString.ljust(longestPokemonNameLength+2) # this handles the gap between pokemon names, which is defined as 2 spaces.
     retString += pokemonNameString + "  "
 
     return retString

@@ -21,9 +21,15 @@ class Pokemon:
     
     def GetName(self) -> str:
         retString = Enums.PokemonName(self.PokemonId).name
-        retString = retString.replace("Female", "♀")
-        retString = retString.replace("Male", "♂")
         retString = retString.replace("_", "-")
+        #pokemon-specific adjustments
+        retString = retString.replace("NidoranFemale", "Nidoran-F")
+        retString = retString.replace("NidoranMale", "Nidoran-M")
+        retString = retString.replace("TypeNull", "Type: Null")
+        retString = retString.replace("Tapu", "Tapu ")
+        retString = retString.replace("MrMime", "Mr. Mime")
+        retString = retString.replace("MimeJr", "Mime Jr.")
+        retString = retString.replace("Farfetchd", "Farfetch'd")
         return retString
     
     # debug
