@@ -14,7 +14,7 @@ Created on Aug 19, 2023
 '''##########################################
 ############ Beginning of config ############
 ##########################################'''
-
+NUM_COLUMNS = 3
 '''##########################################
 ############### End of config ###############
 ##########################################'''
@@ -33,7 +33,7 @@ def main():
     pokemonDict = PokemonDict.PokemonDict()# This is a dictionary so that pokemon weakness lookups are fast.
     pokemonDict.FillDict(typeDict)
 
-    commandHandler = Commands.CommandHandler(pokemonDict, typeDict)
+    commandHandler = Commands.CommandHandler(pokemonDict, typeDict, NUM_COLUMNS)
 
     print("INITIALIZATION COMPLETE.\n\n")
     commandResult = True

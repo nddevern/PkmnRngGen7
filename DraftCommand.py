@@ -9,7 +9,7 @@ import Enums
 import math
 
 # return true if successful
-def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict.TypeDict) -> bool:
+def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict.TypeDict, NUMCOLUMNS) -> bool:
     print("BEGINNING DRAFT.")
     players = GetPlayers()
 
@@ -26,7 +26,7 @@ def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict
         PrintDraftPlayerList(players, longestPokemonNameLength, currentPlayerIndex)
 
         # PRINT POKEMON INFO
-        PrintUndraftedPokemonList(availablePokemon, longestPokemonNameLength)
+        PrintUndraftedPokemonList(availablePokemon, longestPokemonNameLength, NUMCOLUMNS)
 
         # HANDLE CHOOSING A POKEMON
         print("It's " + players[currentPlayerIndex].Name + "'s turn.")
@@ -201,55 +201,59 @@ def GetPlayerPokemonName(player: Player.Player, playerPokemonIndex: int) -> str:
 # desired format:
 # 4 columns (TBD)
 # [1] Uber PokemonName [4] OU   PokemonName
-def PrintUndraftedPokemonList(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int):
+def PrintUndraftedPokemonList(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, NUMCOLUMNS):
     printedPokemon = 0
     i = 0
     while printedPokemon < len(availablePokemon):
-        printedPokemon = PrintUndraftedPokemonRow(availablePokemon, longestPokemonNameLength, i, printedPokemon)
+        printedPokemon = PrintUndraftedPokemonRow(availablePokemon, longestPokemonNameLength, i, printedPokemon, NUMCOLUMNS)
         i += 1
     print("")
 
 
-def PrintUndraftedPokemonRow(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, currentRow: int, printedPokemon: int) -> int:
+def PrintUndraftedPokemonRow(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, currentRow: int, printedPokemon: int, NUMCOLUMNS) -> int:
     printString = ""
     availablePokemonCount = len(availablePokemon)
-    colSize = math.ceil(availablePokemonCount/4)
+    colSize = math.ceil(availablePokemonCount/NUMCOLUMNS)
 
-    # col 1
-    pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, currentRow)
-    if not pokemonPrintString.isspace():
-        printedPokemon += 1
-    printString += pokemonPrintString
+    for i in range(NUMCOLUMNS):
+        includeTrailingSpaces = True
+        if (i == (NUMCOLUMNS-1)):
+            includeTrailingSpaces = False
+        pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, i*colSize+currentRow, includeTrailingSpaces)
+        if not pokemonPrintString.isspace():
+            printedPokemon += 1
+        printString += pokemonPrintString    
 
-    # col 2
-    pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, colSize+currentRow)
-    if not pokemonPrintString.isspace():
-        printedPokemon += 1
-    printString += pokemonPrintString
-
-    # col 3
-    pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, 2*colSize+currentRow)
-    if not pokemonPrintString.isspace():
-        printedPokemon += 1
-    printString += pokemonPrintString
-
-    # col 4
-    pokemonPrintString = GetPokemonPrintString(availablePokemon, longestPokemonNameLength, 3*colSize+currentRow, includeTrailingSpaces=False)
-    if not pokemonPrintString.isspace():
-        printedPokemon += 1
-    printString += pokemonPrintString
     print(printString)
     return printedPokemon
 
 def GetPokemonPrintString(availablePokemon: list[Pokemon.Pokemon], longestPokemonNameLength: int, pokemonIndex: int, includeTrailingSpaces=True) -> str:
     #extra spaces added to ljusts to avoid + " " + 
-    digitsOfMaxIndex = len(str(len(availablePokemon)-1))#length of the string representation of the max index into available pokemon
-    if pokemonIndex < len(availablePokemon):
-        pokemon = availablePokemon[pokemonIndex]
-        indexPart = "[" + str(pokemonIndex+1) + "]"
-        pokemonNameString = pokemon.GetName().ljust(longestPokemonNameLength+5)
-        if not includeTrailingSpaces:
-            pokemonNameString = pokemon.GetName()
-        return indexPart.rjust(digitsOfMaxIndex+2) + "  " + CommonFunctions.GetTierPrintString(pokemon.Tier).rjust(4) + "  " + pokemonNameString
-    else:
+    
+    if pokemonIndex >= len(availablePokemon):
         return ""
+    retString = ""
+    pokemon = availablePokemon[pokemonIndex]
+
+    # index part
+    digitsOfMaxIndex = len(str(len(availablePokemon)-1))#length of the string representation of the max index into available pokemon
+    retString += ("[" + str(pokemonIndex+1) + "]").rjust(digitsOfMaxIndex+2) + "  "
+
+    # pokemon tier part
+    #  current tier
+    retString += CommonFunctions.GetTierPrintString(pokemon.Tier).rjust(4)
+    #  arrow
+    needsMegaString = "-"
+    if (pokemon.CanMega):
+        needsMegaString = "M"
+    retString += "-" + str(pokemon.EvolvesNeeded) + needsMegaString + ">"
+    #  max potential tier
+    retString += "TODO" + "  "
+
+    # pokemon name part
+    pokemonNameString = pokemon.GetName()
+    if includeTrailingSpaces:
+        pokemonNameString = pokemonNameString.ljust(longestPokemonNameLength+5)
+    retString += pokemonNameString + "  "
+
+    return retString
