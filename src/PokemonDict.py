@@ -343,7 +343,7 @@ class PokemonDict:
         self.Add(Enums.PokemonName.Surskit.value, types.Bug, types.Water, Enums.Tier.LC, 284, 3, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Masquerain.value, types.Bug, types.Flying, Enums.Tier.BelowPU, -1, 3, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Shroomish.value, types.Grass, None, Enums.Tier.LC, 286, 3, False, Enums.Tier.INVALID)
-        self.Add(Enums.PokemonName.Breloom.value, types.Grass, types.Fighting, Enums.Tier.UUBL, 288, 3, False, Enums.Tier.INVALID)
+        self.Add(Enums.PokemonName.Breloom.value, types.Grass, types.Fighting, Enums.Tier.UUBL, -1, 3, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Slakoth.value, types.Normal, None, Enums.Tier.LC, 288, 3, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Vigoroth.value, types.Normal, None, Enums.Tier.NFE, 289, 3, False, Enums.Tier.INVALID)
         self.Add(Enums.PokemonName.Slaking.value, types.Normal, None, Enums.Tier.BelowPU, -1, 3, False, Enums.Tier.INVALID)

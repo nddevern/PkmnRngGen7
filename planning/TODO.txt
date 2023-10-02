@@ -1,0 +1,7 @@
+ - Add /weak
+ - Move helper scripts to another file
+ - Add a UI for the images
+ - Add online functionality
+ - Make selecting a pokemon easier by allowing you to type in the name of the desired pokemon
+ - Add gen 8 and 9 pokemon and add config settings to select which gens can appear in the pkmn set
+ - For pkmn sorting, add another sorting by type before alphabetical (and it would use the typechart order)

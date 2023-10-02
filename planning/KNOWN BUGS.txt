@@ -1,0 +1,1 @@
+ - Specify 12 players, then say no. It will still ask you for player names.
