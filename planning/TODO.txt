@@ -1,5 +1,5 @@
  - Add /weak
- - Move helper scripts to another file
+ - Move helper scripts to python package?
  - Add a UI for the images
  - Add online functionality
  - Make selecting a pokemon easier by allowing you to type in the name of the desired pokemon
