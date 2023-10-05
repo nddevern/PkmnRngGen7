@@ -23,7 +23,7 @@ def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict
     currentPlayerIndex = 0
     currentPlayerIndexVelocity = 1
     draftedPokemon = 0
-    while (draftedPokemon < 6*len(players)):
+    while ((draftedPokemon < 6*len(players)) and (len(availablePokemon) > 0)):
         # PRINT PLAYER INFO
         PrintDraftPlayerList(players, longestPokemonNameLength, currentPlayerIndex)
 
@@ -32,7 +32,7 @@ def ExecuteDraftCommand(pokemonDict: PokemonDict.PokemonDict, typeDict: TypeDict
 
         # HANDLE CHOOSING A POKEMON
         print("It's " + players[currentPlayerIndex].Name + "'s turn.")
-        selectedIndex = InputHandling.GetInt("Please enter the number of the Pokemon you'd like to draft:", confirm=True, enforcedMinimum=1, enforcedMaximum=len(availablePokemon))-1
+        selectedIndex = InputHandling.GetInt("Please enter the number of the Pokemon you'd like to draft:", confirm=ConfigSettings.CONFIRM_POKEMON_PICKS, enforcedMinimum=1, enforcedMaximum=len(availablePokemon))-1
         players[currentPlayerIndex].AddPokemon(availablePokemon.pop(selectedIndex))
         currentPlayerIndex += currentPlayerIndexVelocity
         if currentPlayerIndex >= len(players):
@@ -71,7 +71,9 @@ def GetPlayers() -> list[Player.Player]:
     return players
 
 def GeneratePokemon(pokemonDict: PokemonDict.PokemonDict, playerCount: int) -> list[Pokemon.Pokemon]:
-    pokemonPerPlayer = InputHandling.GetInt("How many pokemon per player? (We usually do 12)", maxSaneValue=40, enforcedMinimum=1)
+    pokemonPerPlayer = ConfigSettings.DEFAULT_POKEMON_TO_GENERATE_PER_PLAYER
+    if pokemonPerPlayer < 1:
+        pokemonPerPlayer = InputHandling.GetInt("How many pokemon per player? (We usually do 12)", maxSaneValue=40, enforcedMinimum=1)
     numPokemonToGenerate = pokemonPerPlayer * playerCount
     print("Generating " + str(numPokemonToGenerate) + " pokemon...\n")
 
@@ -313,6 +315,8 @@ def GetPotentialPokemonInfoString(pokemon: Pokemon.Pokemon, pokemonDict: Pokemon
     #  canMega
     finalEvolution = pokemon.GetFinalForm(pokemonDict)
     canMegaString = "-"
+    if (pokemon.CanMega):
+        canMegaString = "*" # Handles the case where they can mega but their max potential pokemon cannot (see Glalie)
     if (finalEvolution.CanMega):
         canMegaString = "M"
     if (finalEvolution.PokemonId == Enums.PokemonName.Groudon.value or finalEvolution.PokemonId == Enums.PokemonName.Kyogre.value):

@@ -5,6 +5,7 @@ import TypeDict
 import PokemonDict
 import InputHandling
 import Commands
+import ConfigSettings
 
 '''
 Created on Aug 19, 2023
@@ -31,7 +32,10 @@ def main():
     print("INITIALIZATION COMPLETE.\n\n")
     commandResult = True
     while (commandResult == True):
-        commandResult = InputHandling.ExecuteCommand("Please enter a command.\n", commandHandler)
+        if (ConfigSettings.DEFAULT_COMMAND == ""):
+            commandResult = InputHandling.ExecuteCommand("Please enter a command.\n", commandHandler)
+        else:
+            commandResult = commandHandler.ExecuteCommand(ConfigSettings.DEFAULT_COMMAND)
     
 
     input("Program complete. Press Enter to close...")
