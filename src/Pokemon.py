@@ -49,7 +49,7 @@ class Pokemon:
         return currentPokemon
     
     def GetMegaTierElseMyTier(self) -> Enums.Tier:
-        if (self.CanMega):
+        if (self.CanMega and self.MegaTier < self.Tier):
             return self.MegaTier
         else:
             return self.Tier

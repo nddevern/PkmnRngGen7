@@ -315,9 +315,9 @@ def GetPotentialPokemonInfoString(pokemon: Pokemon.Pokemon, pokemonDict: Pokemon
     #  canMega
     finalEvolution = pokemon.GetFinalForm(pokemonDict)
     canMegaString = "-"
-    if (pokemon.CanMega):
-        canMegaString = "*" # Handles the case where they can mega but their max potential pokemon cannot (see Glalie)
-    if (finalEvolution.CanMega):
+    if (pokemon.CanMega or finalEvolution.CanMega):
+        canMegaString = "*" # Handles the case where they can mega but their max potential pokemon cannot (see Glalie) or where mega does not increase their tier (Mewtwo)
+    if (finalEvolution.CanMega and finalEvolution.MegaTier < finalEvolution.Tier):
         canMegaString = "M"
     if (finalEvolution.PokemonId == Enums.PokemonName.Groudon.value or finalEvolution.PokemonId == Enums.PokemonName.Kyogre.value):
         canMegaString = "P"
